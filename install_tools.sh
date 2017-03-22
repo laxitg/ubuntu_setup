@@ -1,3 +1,4 @@
+#/bin/bash
 #system wide
 sudo apt install -y apparix
 sudo apt install -y audacity
@@ -36,3 +37,7 @@ if [[ ! -d  "~/.tmux/plugins/tpm" ]]; then
 else
   echo "Didn't clone Tmux Plugin Manager (tpm)"
 fi
+
+# All installed, not add config files
+chmod +x ./cp_configure_files.sh
+./cp_configure_files.sh
