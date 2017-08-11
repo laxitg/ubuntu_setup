@@ -93,7 +93,7 @@ export LANGUAGE=en_US.UTF-8
 
 if command -v tmux>/dev/null; then
   if [[ ! $TERM =~ screen ]] && [ -z $TMUX ]; then # && exec tmux
-    ID="`tmux ls | grep -vm1 attached | cut -d: -f1`" # get the id of a deattached session
+    ID="`tmux ls 2>/dev/null | grep -vm1 attached | cut -d: -f1`" # get the id of a deattached session
     if [[ -z "$ID" ]]; then # if not available create a new one
 	exec tmux new-session
     else
@@ -119,6 +119,7 @@ fi
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+alias lh='ls -lhF'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -197,6 +198,7 @@ function _apparix_aliases ()
 # being expanded
 complete -F _apparix_aliases to
 # --------------- apparix alias end ------------
+
 green="\[\e[01;32m\]"
 cyan="\[\e[01;36m\]"
 yellow="\[\e[01;33m\]"
@@ -285,7 +287,7 @@ function mcd() {
 function rtd() {
   cd ..;
   rm -r $1;
-  mb $1
+  mcd $1
 }
 
 function open() {
@@ -343,10 +345,81 @@ function gitkbg() { gitk --all $@ & 1>/dev/null 2>&1; }
 
 function matlabnd() { matlab -nodesktop $@; }
 
-function ignore_catkin_pkg() { touch CATKIN_IGNORE; }
+function ignore_catkin_pkg() {
+  fn=""
+  if [[ -z $1 ]]; then
+    fn="CATKIN_IGNORE"
+  else
+    fn="$1"'/'"CATKIN_IGNORE"
+  fi
+  touch $fn;
+}
+
 function ccmake_catkin() { ccmake ~/catkin_ws/build; }
+function kill_roscore() { killall -9 roscore rosmaster rosout; }
+function ctrlc_roscore() { killall -2 roscore rosmaster rosout; }
+
+function pid2name() {
+  #pidof, pgrep are it's opposite
+  if [[ "$#" -lt 1 ]]; then
+    echo "PID should be the one and only argument to the command"
+  else
+    ps -p $1 -o comm=
+  fi
+}
+
+function tmux_session_name() {
+  #pidof, pgrep are it's opposite
+  if [[ "$#" -lt 1 ]]; then
+    echo "PID should be the one and only argument to the command"
+  else
+    ps -p $1 -o comm=
+  fi
+}
+
+function grepit() {
+  grep -iIrn $@ *
+}
+
+function grepiT() {
+  grep -Irn $@ *
+}
+
+function dush() {
+  if [[ "$#" -lt 1 ]]; then
+    echo "Total of current dir"
+    echo "===================="
+    du -sh 2>/dev/null
+    echo ""
+    echo "Size of individual directories/files"
+    echo "=============================="
+    du -sh * 2>/dev/null
+  else
+    dir=${1%/}
+    echo "dir: " $dir
+    echo "Total of current dir"
+    echo "===================="
+    du -sh $dir 2>/dev/null
+    echo ""
+    echo "Size of individual directories/files"
+    echo "=============================="
+    du -sh $dir/* 2>/dev/null
+  fi
+}
+
+function du_big_files() {
+  if [[ "$#" -lt 1 ]]; then
+    echo "Showing 10 biggest, first argument can change 10 to n."
+    echo "du_big_files 20: Show 20 biggest"
+    echo ""
+    du -a | sort -rn | head 2>/dev/null
+  else
+    du -a | sort -rn | head -n $1 2>/dev/null
+  fi
+}
 
 alias src='source ~/.bashrc'
+alias cat_github_token='cat /media/mw-uu03/Data/Documents/swahana/MW_presentations/git_adas_access_token'
 
 export LM_LICENSE_FILE=/usr/local/MATLAB/R2016b/license.dat
 export PATH=$PATH:/usr/local/MATLAB/R2016b/bin

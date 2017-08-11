@@ -3,4 +3,6 @@
 "\e[C": forward-char
 "\e[D": backward-char
 
+"[3~": kill-word
+
 set completion-ignore-case On

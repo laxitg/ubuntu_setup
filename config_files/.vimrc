@@ -3,7 +3,7 @@ set nocompatible
 set nu 				" set numbers on
 set rnu 			" set relative numbers on
 set shiftwidth=2
-au FileType cpp,c,java,sh  set cindent
+au FileType cpp,c,java,sh set cindent
 set scrolloff=2
 set showtabline=1
 set mouse=i
@@ -11,7 +11,7 @@ set mousehide
 set hidden
 set autoindent    		" always set autoindenting on
 set copyindent    		" copy the previous indentation on autoindenting
-set textwidth=80
+au FileType cpp,c,cc,java set textwidth=80
 set backspace=indent,eol,start  " allow backspacing over everything in insert mode 
 set whichwrap+=<,>,h,l,[,]      " wrap the end and begining of line for moving cursor.
 set showmatch 			" set show matching parenthesis 
@@ -28,7 +28,7 @@ set hlsearch      		" highlight search terms
 set incsearch     		" show search matches as you type
 set wak=no 			" windows alt key (alt key should be captured
 				" by vim (yes), gui(menu), no
-set guifont=Meslo\ LG\ M\ for\ Powerline\ 13 " <~ set the font
+set guifont=Meslo\ LG\ M\ for\ Powerline\ 11 " <~ set the font
 set cursorline
 set cpoptions=ces$ 		"understand this
 
@@ -201,7 +201,8 @@ imap jj <Esc>
 " tags file will be hidden, i.e. .tags
 set tags=.tags
 "map <C-F12> :!ctags -R --sort=yes --c++-kinds=+p --fields=+iaS --extra=+q --exclude=@.gitignore .<CR>
-map <C-F12> :!ctags -f .tags -R --sort=yes --fields=+a --extra=+q --exclude=@.gitignore .<CR>
+map <C-F11> :!ctags -f .tags -R --sort=yes --fields=+a --extra=+q --exclude=@.gitignore .<CR>
+map <C-F12> :!ctags -f .tags -R --sort=yes --fields=+a --extra=+q .<CR>
 
 nmap <silent> <leader>/ :nohlsearch<CR>
 
@@ -209,12 +210,11 @@ nmap <silent> <leader>/ :nohlsearch<CR>
 nmap \\\\ <C-W><bar>
 nmap -- <C-W>_
 nmap -\\ <C-W>_<C-W><bar>
-map  <silent> <M-h> :call MoveToWindow("h")<CR>
-map  <silent> <M-l> :call MoveToWindow("l")<CR>
+map  <silent> <M-a> :call MoveToWindow("h")<CR>
+map  <silent> <M-d> :call MoveToWindow("l")<CR>
 
-map  <silent> <M-k> :call MoveToWindow("k")<CR>
-map  <silent> <M-j> :call MoveToWindow("j")<CR>
-nmap <T-F5> :echo "Temp"<CR>
+map  <silent> <M-w> :call MoveToWindow("k")<CR>
+map  <silent> <M-s> :call MoveToWindow("j")<CR>
 
 map <leader>v :vsplit<CR>
 
@@ -443,8 +443,8 @@ hi link clighterTemplateTypeParameter Type
 
 " Higlighting the 80 char limit This is here cause if it's set above then it's
 " affect are neutralized, don't know why though
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-match OverLength /\%81v.\+/
+au FileType cpp,c,java highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+au FileType cpp,c,java match OverLength /\%81v.\+/
 
 " --------------------------* FUNCTIONS *-------------------------
 
@@ -489,7 +489,7 @@ function! ToggleFoldOrMove()
   let l:fold_level = foldlevel(l:line_num)
   if l:fold_level > 0
     " Toggle fold
-    execute "normal! za"
+    execute "normal! zA"
   else
     " ow execute the normal bheaviour.
     execute "normal! l"
